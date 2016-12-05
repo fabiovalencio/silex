@@ -1,0 +1,10 @@
+
+.idea
+*.iml
+out
+gen
+/bin/
+/vendor/
+/composer.json
+/composer.phar
+/composer.lock

@@ -10,7 +10,7 @@
         <td>
         'mkdir codeeducation'
         <br />
-        'cd codeeducation'
+        'cd silex'
         <br />
         'clone url-git'
         <br />
