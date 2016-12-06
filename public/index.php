@@ -3,6 +3,29 @@
 require_once __DIR__.'/../bootstrap.php';
 
 use Symfony\Component\HttpFoundation\Response;
+use Code\Sistema\Service\ClienteService;
+use Code\Sistema\Entity\Cliente;
+use Code\Sistema\Mapper\ClienteMapper;
+
+
+$app['clienteService'] = function (){
+
+    /**
+     * @return Cliente
+     */
+    $clienteEntity = new Cliente();
+
+    /**
+     * @return ClienteMapper
+     */
+    $clienteMapper = new ClienteMapper();
+
+    /**
+     * @return ClienteService
+     */
+    $clienteService = new ClienteService($clienteEntity, $clienteMapper);
+    return $clienteService;
+};
 
 $app->get("/", function () {
 
@@ -46,6 +69,17 @@ $arrayClientes = [
 $app->get("/clientes", function () use ($app, $arrayClientes) {
 
     return $app->json($arrayClientes, 200);
+
+});
+
+$app->get("/cliente", function () use ($app) {
+
+    $dados['nome'] = 'Cliente';
+    $dados['email'] = 'email@cliente.com';
+
+    $result = $app['clienteService']->insert($dados);
+
+    return $app->json($result);
 
 });
 

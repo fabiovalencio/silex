@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="clientes")
  */
 
-class Client
+class Cliente
 {
     /**
      * @ORM\Id
