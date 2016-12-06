@@ -29,6 +29,48 @@ $app['clienteService'] = function (){
 };
 
 
+$app->get("/api/clientes", function () use ($app) {
+
+    $clientes = $app['clienteService']->fetchAll();
+    return $app->json( $clientes );
+
+})->bind('api/clientes');
+
+$app->get("/api/clientes/{id}", function ($id) use ($app) {
+
+    $clientes = $app['clienteService']->find($id);
+    return $app->json( $clientes );
+
+})->bind('api/clientes');
+
+$app->post("/api/cliente", function (Request $request) use ($app) {
+
+    $dados['nome'] = $request->get('nome');
+    $dados['email'] = $request->get('email');
+
+    $result = $app['clienteService']->insert($dados);
+
+    return $app->json($result);
+
+})->bind('api/cliente');
+
+$app->put("/api/clientes/{id}", function ($id, Request $request) use ($app) {
+
+    $dados['nome'] = $request->request->get('nome');
+    $dados['email'] = $request->request->get('email');
+
+
+    $clientes = $app['clienteService']->update($id, $dados);
+    return $app->json( $clientes );
+
+});
+
+$app->delete("/api/clientes/{id}", function ($id) use ($app) {
+
+    $clientes = $app['clienteService']->delete($id);
+    return $app->json( $clientes );
+
+});
 
 
 
@@ -62,5 +104,6 @@ $app->get("/cliente", function () use ($app) {
     return $app->json($result);
 
 });
+
 
 $app->run();

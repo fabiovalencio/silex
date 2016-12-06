@@ -45,6 +45,22 @@ class ClienteMapper
         return $result;
     }
 
+    public function update($id, array $data)
+    {
+        $result = $this->busca($this->dados, $id);
+
+        $result['nome'] = $data['nome'] ? $data['nome'] : $result['nome'];
+        $result['email'] = $data['email'] ? $data['email'] : $result['email'];
+
+        return $result;
+    }
+
+    public function delete($id)
+    {
+        unset($this->dados[$id]);
+        return ['success' => true];
+    }
+
     private function busca($array, $id){
         foreach($array as $key => $value){
             if ($value['id'] == $id){

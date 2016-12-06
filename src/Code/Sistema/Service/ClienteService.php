@@ -37,4 +37,14 @@ class ClienteService
     {
         return $this->clienteMapper->find($id);
     }
+
+    public function update($id, $data)
+    {
+        return $this->clienteMapper->update($id, $data);
+    }
+
+    public function delete($id)
+    {
+        return $this->clienteMapper->delete($id);
+    }
 }
