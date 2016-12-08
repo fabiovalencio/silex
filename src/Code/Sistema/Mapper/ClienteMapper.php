@@ -3,31 +3,26 @@
 namespace Code\Sistema\Mapper;
 
 use Code\Sistema\Entity\Cliente;
+use Doctrine\ORM\EntityManager;
 
 class ClienteMapper
 {
-    private $dados = [
 
-        0 => [
-            'id' => 1,
-            'nome' => 'Cliente X',
-            'email' => 'clientex@cliente.com'
-        ],
-        1 => [
-            'id' => 2,
-            'nome' => 'Cliente Y',
-            'email' => 'clientey@cliente.com'
-        ],
-        2 => [
-            'id' => 3,
-            'nome' => 'Cliente Z',
-            'email' => 'clientez@cliente.com'
-        ]
-    ];
+    private $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
 
     public function insert(Cliente $cliente)
     {
+        $this->em->persist($cliente);
+        $this->em->flush();
+
         return [
+            'success' => true,
+            'id' => $cliente->getId(),
             'nome' => $cliente->getNome(),
             'email' => $cliente->getEmail()
         ];
@@ -35,38 +30,40 @@ class ClienteMapper
 
     public function fetchAll()
     {
-        $dados = $this->dados;
+        $repo = $this->em->getRepository('Code\Sistema\Entity\Cliente');
+        $dados = $repo->findAll();
+
         return $dados;
     }
 
     public function find($id)
     {
-        $result = $this->busca($this->dados, $id);
+        $result = $this->repo->find($id);
         return $result;
     }
 
     public function update($id, array $data)
     {
-        $result = $this->busca($this->dados, $id);
 
-        $result['nome'] = $data['nome'] ? $data['nome'] : $result['nome'];
-        $result['email'] = $data['email'] ? $data['email'] : $result['email'];
+        $result = $this->repofind($id);
+
+        $nome = $data['nome'] ? $data['nome'] : $result->getNome();
+        $email = $data['email'] ? $data['email'] : $result->getEmail();
+
+        $result->setNome($nome);
+        $result->setEmail($email);
+
+        $this->em->flush();
 
         return $result;
     }
 
     public function delete($id)
     {
-        unset($this->dados[$id]);
+        $result = $this->repo->find($id);
+        $result->remove($result);
+
         return ['success' => true];
     }
 
-    private function busca($array, $id){
-        foreach($array as $key => $value){
-            if ($value['id'] == $id){
-                return $value;
-            }
-        }
-        return null;
-    }
 }

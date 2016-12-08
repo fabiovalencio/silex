@@ -9,22 +9,12 @@ use Code\Sistema\Entity\Cliente;
 use Code\Sistema\Mapper\ClienteMapper;
 
 
-$app['clienteService'] = function (){
+$app['clienteService'] = function () use ($em){
 
-    /**
-     * @return Cliente
-     */
     $clienteEntity = new Cliente();
-
-    /**
-     * @return ClienteMapper
-     */
-    $clienteMapper = new ClienteMapper();
-
-    /**
-     * @return ClienteService
-     */
+    $clienteMapper = new ClienteMapper($em);
     $clienteService = new ClienteService($clienteEntity, $clienteMapper);
+
     return $clienteService;
 };
 
@@ -32,20 +22,21 @@ $app['clienteService'] = function (){
 $app->get("/api/clientes", function () use ($app) {
 
     $clientes = $app['clienteService']->fetchAll();
+
     return $app->json( $clientes );
 
-})->bind('api/clientes');
+});
 
 $app->get("/api/clientes/{id}", function ($id) use ($app) {
 
-    $clientes = $app['clienteService']->find($id);
-    return $app->json( $clientes );
+    $cliente = $app['clienteService']->find($id);
+    return $app->json( $cliente );
 
-})->bind('api/clientes');
+});
 
 $app->post("/api/cliente", function (Request $request) use ($app) {
 
-    $dados['nome'] = $request->get('nome');
+    $dados['nome'] = $request->request->get('nome');
     $dados['email'] = $request->get('email');
 
     $result = $app['clienteService']->insert($dados);
@@ -65,12 +56,16 @@ $app->put("/api/clientes/{id}", function ($id, Request $request) use ($app) {
 
 });
 
-$app->delete("/api/clientes/{id}", function ($id) use ($app) {
+$app->delete("/api/cliente/{id}", function ($id) use ($app) {
 
     $clientes = $app['clienteService']->delete($id);
     return $app->json( $clientes );
 
 });
+
+
+
+
 
 
 

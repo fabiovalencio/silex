@@ -42,10 +42,10 @@ $evm = new Doctrine\Common\EventManager();
 $em = EntityManager::create(
     array(
         'driver'  => 'pdo_mysql',
-        'host'    => '127.0.01',
-        'port'    => '3333',
-        'user'    => 'root',
-        'password'  => 'root',
+        'host'    => '127.0.0.1',
+        'port'    => '33060',
+        'user'    => 'homestead',
+        'password'  => 'secret',
         'dbname'  => 'trilhando_doctrine',
     ),
     $config,
