@@ -1,0 +1,38 @@
+{% extends 'layout.twig' %}
+
+{% block conteudo %}
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Cadastrar novo cliente</h2>
+        </div>
+
+        <div class="row col-sm-6">
+            <div class="box">
+                <div class="box-body">
+
+                    <form role="form" id="formCliente" action="{{ path('cliente-update', {'id': cliente.id}) }}" method="post">
+
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" class="form-control" name="nome" placeholder="Nome do cliente" value="{{ cliente.nome }}">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" class="form-control" name="email" placeholder="E-mail do cliente" value="{{ cliente.email }}">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="cliente" class="btn btn-primary">Salvar</button>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

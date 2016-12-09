@@ -2,49 +2,73 @@
 
 namespace Code\Sistema\Service;
 
-use Code\Sistema\Entity\Cliente;
-use Code\Sistema\Mapper\ClienteMapper;
+use Code\Sistema\Entity\Cliente as ClienteEntity;
+use Code\Sistema\Entity\ClienteRepository;
+use Doctrine\ORM\EntityManager;
 
+//FACADE
 class ClienteService
 {
-    private $cliente;
-    private $clienteMapper;
+    /**
+     * @var EntityManager
+     */
+    private $em;
 
-    public function __construct(Cliente $cliente, ClienteMapper $clienteMapper)
+    public function __construct(EntityManager $em)
     {
-        $this->cliente = $cliente;
-        $this->clienteMapper = $clienteMapper;
+        $this->em = $em;
     }
 
     public function insert(array $data)
     {
-        $clienteEntity = $this->cliente;
+        $clienteEntity = new ClienteEntity();
         $clienteEntity->setNome($data['nome']);
         $clienteEntity->setEmail($data['email']);
 
-        $mapper = $this->clienteMapper;
-        $result = $mapper->insert($clienteEntity);
+        $this->em->persist($clienteEntity);
+        $this->em->flush();
 
-        return $result;
+        return $clienteEntity;
     }
 
     public function fetchAll()
     {
-        return $this->clienteMapper->fetchAll();
+        /**
+         * @var ClienteRepository $repo
+         */
+        $repo = $this->em->getRepository("Code\Sistema\Entity\Cliente");
+        $result = $repo->getClientesAsc();
+
+        return $result;
     }
 
     public function find($id)
     {
-        return $this->clienteMapper->find($id);
+        $cliente = $this->em->getReference("Code\Sistema\Entity\Cliente", $id);
+
+        return $cliente;
     }
 
-    public function update($id, $data)
+    public function update($id, array $array)
     {
-        return $this->clienteMapper->update($id, $data);
+        $cliente = $this->em->getReference("Code\Sistema\Entity\Cliente", $id);
+
+        $cliente->setNome($array['nome']);
+        $cliente->setEmail($array['email']);
+
+        $this->em->persist($cliente);
+        $this->em->flush();
+
+        return $cliente;
     }
 
     public function delete($id)
     {
-        return $this->clienteMapper->delete($id);
+        $cliente = $this->em->getReference("Code\Sistema\Entity\Cliente", $id);
+
+        $this->em->remove($cliente);
+        $this->em->flush();
+
+        return true;
     }
 }

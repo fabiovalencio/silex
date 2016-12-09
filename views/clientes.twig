@@ -1,7 +1,72 @@
-<h1>Clientes</h1>
+{% extends 'layout.twig' %}
 
-<ul>
-    {% for cliente in clientes %}
-        <li>{{ cliente.nome }} - ({{ cliente.email }})</li>
-    {% endfor %}
-</ul>
+{% block conteudo %}
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Clientes</h2>
+        </div>
+
+        <div class="row">
+            <div class="box">
+                <div class="box-body">
+                    <a href="{{ url('cliente/create') }}" class="btn btn-app">
+                        <i class="fa fa-plus"></i> Novo
+                    </a>
+                    <table class="table table-bordered">
+                        <tbody>
+                        <thead>
+                        <tr>
+                            <th hidden="hidden">id</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Ação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cliente in clientes %}
+                            <tr>
+                                <td hidden="hidden">{{ cliente.id }}</td>
+                                <td>{{ cliente.nome }}</td>
+                                <td>{{ cliente.email }}</td>
+                                <td>
+                                    <a href="{{ path('cliente/update', {'id' : cliente.id}) }}">Editar</a>
+                                    <a onclick="excluir('{{ url('cliente/delete', {id: cliente.id}) }}')">Deletar</a>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script type="application/javascript">
+        function excluir(url) {
+            var q = confirm("Confirma a exclusão da campanha?");
+            if (q == true) {
+                $.ajax({
+                    method: "DELETE",
+                    url: url
+                })
+                        .done(function( msg ) {
+                            location.reload();
+                        })
+                        .fail(function(e) {
+                            alert(e);
+                            console.log(e);
+                        });
+            }
+        }
+    </script>
+
+{% endblock %}
