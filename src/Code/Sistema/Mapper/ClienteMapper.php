@@ -9,10 +9,12 @@ class ClienteMapper
 {
 
     private $em;
+    private $repo;
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->repo = $this->em->getRepository('Code\Sistema\Entity\Cliente');
     }
 
     public function insert(Cliente $cliente)
@@ -30,8 +32,8 @@ class ClienteMapper
 
     public function fetchAll()
     {
-        $repo = $this->em->getRepository('Code\Sistema\Entity\Cliente');
-        $dados = $repo->findAll();
+
+        $dados = $this->repo->findAll();
 
         return $dados;
     }
@@ -45,7 +47,7 @@ class ClienteMapper
     public function update($id, array $data)
     {
 
-        $result = $this->repofind($id);
+        $result = $this->repo->find($id);
 
         $nome = $data['nome'] ? $data['nome'] : $result->getNome();
         $email = $data['email'] ? $data['email'] : $result->getEmail();
@@ -61,7 +63,8 @@ class ClienteMapper
     public function delete($id)
     {
         $result = $this->repo->find($id);
-        $result->remove($result);
+        $this->em->remove($result);
+        $this->em->flush();
 
         return ['success' => true];
     }

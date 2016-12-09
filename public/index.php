@@ -19,11 +19,11 @@ $app['clienteService'] = function () use ($em){
 };
 
 
+################################### A P I ######################################
 $app->get("/api/clientes", function () use ($app) {
 
     $clientes = $app['clienteService']->fetchAll();
-
-    return $app->json( $clientes );
+    return $app->json($clientes);
 
 });
 
@@ -50,7 +50,6 @@ $app->put("/api/clientes/{id}", function ($id, Request $request) use ($app) {
     $dados['nome'] = $request->request->get('nome');
     $dados['email'] = $request->request->get('email');
 
-
     $clientes = $app['clienteService']->update($id, $dados);
     return $app->json( $clientes );
 
@@ -66,10 +65,7 @@ $app->delete("/api/cliente/{id}", function ($id) use ($app) {
 
 
 
-
-
-
-
+################################### W E B ######################################
 $app->get("/", function () use ($app) {
 
     return $app['twig']->render('index.twig', []);
@@ -89,16 +85,6 @@ $app->get("/clientes", function () use ($app) {
 
 })->bind('clientes');
 
-$app->get("/cliente", function () use ($app) {
-
-    $dados['nome'] = 'Cliente';
-    $dados['email'] = 'email@cliente.com';
-
-    $result = $app['clienteService']->insert($dados);
-
-    return $app->json($result);
-
-});
 
 
 $app->run();
